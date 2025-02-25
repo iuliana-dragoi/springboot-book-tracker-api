@@ -1,0 +1,9 @@
+CREATE TABLE IF NOT EXISTS user_books (
+    id BIGSERIAL PRIMARY KEY,
+    user_id BIGINT NOT NULL,
+    book_id BIGINT NOT NULL,
+    progress DOUBLE PRECISION NOT NULL,
+    review TEXT,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (book_id) REFERENCES books(id) ON DELETE CASCADE
+);
