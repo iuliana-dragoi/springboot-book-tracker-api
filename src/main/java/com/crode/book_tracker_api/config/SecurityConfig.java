@@ -27,6 +27,7 @@ public class SecurityConfig {
         http
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/h2-console/**").permitAll() // Allow access to H2 console for testing
+                .requestMatchers("/library").permitAll()
                 .anyRequest().authenticated() // Any other request must be authenticated
             )
             .formLogin(form -> form
