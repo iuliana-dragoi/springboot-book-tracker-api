@@ -70,7 +70,12 @@
                 <!-- All Books Tab -->
                 <div class="tab-pane fade show active" id="all-books" role="tabpanel" aria-labelledby="all-books-tab">
                     <h2 class="mb-4">All Books</h2>
+
                     <div class="list-group">
+
+                        <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+                        <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+
                         <div class="list-group-item" th:each="book : ${books}">
                             <div class="d-flex justify-content-between">
                                 <div>
@@ -78,7 +83,18 @@
                                     <p class="book-author" th:text="'by ' + ${book.author}"></p>
                                     <p class="book-description" th:text="${book.description}"></p>
                                 </div>
-                                <button class="btn btn-info">Add to my list</button>
+
+                                <form class="fancyButton" th:action="@{/userBooks/addToList}" method="post">
+                                    <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
+                                    <input type="hidden" name="bookId" th:value="${book.id}" />
+
+                                    <div th:if="${not bookIds.contains(book.id)}">
+                                        <button  class="btn btn-primary" type="submit">Add to List</button>
+                                    </div>
+                                    <div th:if="${bookIds.contains(book.id)}">
+                                        <p>Book already in list</p>
+                                    </div>
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -86,7 +102,6 @@
 
                 <!-- My Books Tab -->
                 <div class="tab-pane fade" id="my-books" role="tabpanel" aria-labelledby="my-books-tab">
-
 
                     <div class="container mt-5">
                         <!-- Collapsible Menu -->
@@ -165,6 +180,7 @@
             -->
 
         </div>
+
         <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
     </body>
