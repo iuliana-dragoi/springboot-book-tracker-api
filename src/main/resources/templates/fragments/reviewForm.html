@@ -1,0 +1,21 @@
+<div id="reviewFormContainer" th:fragment="reviewFormContainer">
+
+    <form class="updateUserBookForm" th:action="@{/userBooks/updateReview}" method="post">
+        <input type="hidden" name="bookId" th:value="${userBook.book.id}" />
+        <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
+
+        <div class="row">
+            <div class="col">
+                <label for="reviewText" class="form-label">Write your review:</label>
+                <textarea id="reviewText" name="review" class="form-control" rows="2" required></textarea>
+            </div>
+
+            <div class="">
+                <div class="center">
+                    <button type="submit" class="btn btn-primary">Submit Review</button>
+                </div>
+            </div>
+        </div>
+    </form>
+
+</div>

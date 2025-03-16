@@ -53,7 +53,6 @@ public class UserBookService {
         userBookRepository.save(userBook);
     }
 
-
     public void addToProgress(Long bookId, String username) {
         User user = userRepository.findUserByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
@@ -66,6 +65,29 @@ public class UserBookService {
         userBookRepository.save(userBook);
     }
 
+    public void updateProgress(Long bookId, String username, double progress) {
+        User user = userRepository.findUserByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        UserBook userBook = userBookRepository.findByBookIdAndUserId(bookId, user.getId())
+                .orElseThrow(() -> new RuntimeException("The book is not in the user's list"));
+
+        userBook.setProgress(progress);
+
+        userBookRepository.save(userBook);
+    }
+
+    public void updateReview(Long bookId, String username, String review) {
+        User user = userRepository.findUserByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        UserBook userBook = userBookRepository.findByBookIdAndUserId(bookId, user.getId())
+                .orElseThrow(() -> new RuntimeException("The book is not in the user's list"));
+
+        userBook.setReview(review);
+
+        userBookRepository.save(userBook);
+    }
 
     public void addToRead(Long bookId, String username) {
         User user = userRepository.findUserByUsername(username)

@@ -7,7 +7,7 @@
                 <li class="list-group-item" th:each="userBook : ${toReadBooks}">
                     <div class="row">
                         <div class="col">
-                            <span th:text="'Title: ' + ${userBook.book.title}"></span>
+                            <span class="center" th:text="'Title: ' + ${userBook.book.title}"></span>
                         </div>
                         <div class="">
                             <form class="updateUserBookForm" th:action="@{/userBooks/addToProgress}" method="post">
@@ -19,7 +19,6 @@
                     </div>
                 </li>
             </ul>
-
         </div>
 
         <div class="col card-body">
@@ -28,9 +27,30 @@
                 <li class="list-group-item" th:each="userBook : ${inProgressBooks}">
                     <div class="row">
                         <div class="col">
-                            <span th:text="'Title: ' + ${userBook.book.title} + ' | Progress: ' + ${userBook.progress} + '%'"></span>
+                            <span class="center" th:text="'Title: ' + ${userBook.book.title}"></span>
                         </div>
+
+                        <div class="col">
+                            <div class="center">
+                                <div class="progress w-100">
+                                    <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"
+                                         th:style="'width:' + ${userBook.progress ?: 0} + '%; margin-top: 0;'">
+                                        <span th:text="${userBook.progress + ' %' ?: 0}"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="">
+                            <form class="updateUserBookForm" th:action="@{/userBooks/updateProgress}" method="post">
+                                <input type="hidden" name="bookId" th:value="${userBook.book.id}" />
+                                <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
+                                <input type="number" name="progress" min="0" max="100" step="1" />
+                                <button type="submit" class="btn btn-secondary">Update</button>
+                            </form>
+                        </div>
+
+                        <div style="padding-left: 4px" th:if="${userBook.progress == 100}">
                             <form class="updateUserBookForm" th:action="@{/userBooks/addToRead}" method="post">
                                 <input type="hidden" name="bookId" th:value="${userBook.book.id}" />
                                 <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
@@ -47,14 +67,37 @@
             <h3 class="mb-2">Read</h3>
             <ul class="list-group">
                 <li class="list-group-item" th:each="userBook : ${readBooks}">
+
                     <div class="row">
-                        <div class="col">
-                            <span th:text="'Title: ' + ${userBook.book.title}"></span>
+
+                        <div class="col-md-auto">
+                            <span class="center" th:text="'Title: ' + ${userBook.book.title}"></span>
                         </div>
-                        <div class="">
-                            <i class="fa-solid fa-check-circle text-success"></i>
+
+                        <div class="col">
+                            <div th:if="${userBook.review != null}">
+                                <button style="margin-bottom: 4px" class="btn btn-secondary" type="button" data-toggle="collapse" th:data-target="'#collapseExample' + ${userBook.book.id}"  aria-expanded="false" th:aria-controls="'collapseExample' + ${userBook.book.id}">
+                                    Change review
+                                </button>
+
+                                <div class="collapse" th:id="'collapseExample' + ${userBook.book.id}">
+                                    <div th:replace="~{fragments/reviewForm :: #reviewFormContainer}"></div>
+                                </div>
+                            </div>
+
+                            <div th:if="${userBook.review == null}">
+                                <div th:replace="~{fragments/reviewForm :: #reviewFormContainer}"></div>
+                            </div>
                         </div>
                     </div>
+
+                    <div style="padding-top: 16px">
+                        <div class="card shadow-sm border-0 bg-light p-3">
+                            <h6 class="fw-bold text-primary">Your Review</h6>
+                            <p class="mb-0 text-muted" th:text="${userBook.review}"></p>
+                        </div>
+                    </div>
+
                 </li>
             </ul>
         </div>
