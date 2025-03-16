@@ -1,0 +1,63 @@
+<div id="userBookContainer" th:fragment="userBookContainer">
+
+    <div class="row">
+        <div class="col card-body">
+            <h3 class="mb-2">To Read</h3>
+            <ul class="list-group">
+                <li class="list-group-item" th:each="userBook : ${toReadBooks}">
+                    <div class="row">
+                        <div class="col">
+                            <span th:text="'Title: ' + ${userBook.book.title}"></span>
+                        </div>
+                        <div class="">
+                            <form class="updateUserBookForm" th:action="@{/userBooks/addToProgress}" method="post">
+                                <input type="hidden" name="bookId" th:value="${userBook.book.id}" />
+                                <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
+                                <button type="submit" class="btn btn-primary">Start Reading</button>
+                            </form>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+
+        </div>
+
+        <div class="col card-body">
+            <h3 class="mb-2">In Progress</h3>
+            <ul class="list-group">
+                <li class="list-group-item" th:each="userBook : ${inProgressBooks}">
+                    <div class="row">
+                        <div class="col">
+                            <span th:text="'Title: ' + ${userBook.book.title} + ' | Progress: ' + ${userBook.progress} + '%'"></span>
+                        </div>
+                        <div class="">
+                            <form class="updateUserBookForm" th:action="@{/userBooks/addToRead}" method="post">
+                                <input type="hidden" name="bookId" th:value="${userBook.book.id}" />
+                                <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
+                                <button type="submit" class="btn btn-primary">Complete</button>
+                            </form>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+
+        </div>
+
+        <div class="col card-body">
+            <h3 class="mb-2">Read</h3>
+            <ul class="list-group">
+                <li class="list-group-item" th:each="userBook : ${readBooks}">
+                    <div class="row">
+                        <div class="col">
+                            <span th:text="'Title: ' + ${userBook.book.title}"></span>
+                        </div>
+                        <div class="">
+                            <i class="fa-solid fa-check-circle text-success"></i>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+</div>

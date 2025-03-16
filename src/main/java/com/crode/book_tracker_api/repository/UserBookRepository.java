@@ -11,7 +11,9 @@ public interface UserBookRepository extends JpaRepository<UserBook, Long> {
 
     List<UserBook> findByStatus(BookStatus status);
 
-    Optional<UserBook> findByBookId(Long bookId);
+    List<UserBook> findByUserIdAndStatus(Long userId, BookStatus status);
+
+    Optional<UserBook> findByBookIdAndUserId(Long bookId, Long userId);
 
     List<UserBook> findByUserId(Long userId);
 

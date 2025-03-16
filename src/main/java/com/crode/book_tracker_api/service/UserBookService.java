@@ -28,8 +28,11 @@ public class UserBookService {
         this.userRepository = userRepository;
     }
 
-    public List<UserBook> getBooksByStatus(BookStatus status) {
-        return userBookRepository.findByStatus(status);
+    public List<UserBook> getBooksByUserAndStatus(String username, BookStatus status) {
+        User user = userRepository.findUserByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        return userBookRepository.findByUserIdAndStatus(user.getId(), status);
     }
 
     public void addToList(Long bookId, String username) {
@@ -39,7 +42,7 @@ public class UserBookService {
         User user = userRepository.findUserByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        userBookRepository.findByBookId(bookId).ifPresent(userBook -> {
+        userBookRepository.findByBookIdAndUserId(bookId, user.getId()).ifPresent(userBook -> {
             throw new IllegalArgumentException("Book is already in the user's list");
         });
 
@@ -50,7 +53,34 @@ public class UserBookService {
         userBookRepository.save(userBook);
     }
 
-    public Set<Long> getBooksByUser(String username) {
+
+    public void addToProgress(Long bookId, String username) {
+        User user = userRepository.findUserByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        UserBook userBook = userBookRepository.findByBookIdAndUserId(bookId, user.getId())
+                .orElseThrow(() -> new RuntimeException("The book is not in the user's list"));
+
+        userBook.setStatus(BookStatus.IN_PROGRESS);
+
+        userBookRepository.save(userBook);
+    }
+
+
+    public void addToRead(Long bookId, String username) {
+        User user = userRepository.findUserByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        UserBook userBook = userBookRepository.findByBookIdAndUserId(bookId, user.getId())
+                .orElseThrow(() -> new RuntimeException("The book is not in the user's list"));
+
+        userBook.setStatus(BookStatus.READ);
+
+        userBookRepository.save(userBook);
+    }
+
+
+    public Set<Long> getBookIdsByUser(String username) {
         User user = userRepository.findUserByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
@@ -58,5 +88,12 @@ public class UserBookService {
         return userBooks.stream()
             .map(userBook -> userBook.getBook().getId())
             .collect(Collectors.toSet());
+    }
+
+    public List<UserBook> getBookByUser(String username) {
+        User user = userRepository.findUserByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+       return userBookRepository.findByUserId(user.getId());
     }
 }

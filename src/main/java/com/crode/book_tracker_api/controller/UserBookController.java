@@ -1,9 +1,11 @@
 package com.crode.book_tracker_api.controller;
 
+import com.crode.book_tracker_api.model.BookStatus;
+import com.crode.book_tracker_api.service.BookService;
 import com.crode.book_tracker_api.service.UserBookService;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.security.Principal;
 
 @Controller
@@ -12,21 +14,60 @@ public class UserBookController {
 
     private UserBookService userBookService;
 
-    public UserBookController(UserBookService userBookService) {
+    private final BookService bookService;
+
+    public UserBookController(UserBookService userBookService, BookService bookService) {
         this.userBookService = userBookService;
+        this.bookService = bookService;
     }
 
     @PostMapping("/addToList")
-    public String addToRead(@RequestParam("bookId") Long bookId, Principal principal, RedirectAttributes redirectAttributes) {
-        System.out.println("Received request to add bookId: " + bookId + " for user: " + principal.getName());
+    public String addToList(@RequestParam("bookId") Long bookId, Model model, Principal principal) {
 
         try {
             userBookService.addToList(bookId, principal.getName());
-            redirectAttributes.addFlashAttribute("successMessage", "Book added successfully!");
+            model.addAttribute("successMessage", "Book added successfully!");
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+            e.printStackTrace();
+            model.addAttribute("errorMessage", e.getMessage());
         }
 
-        return "redirect:/library";
+        model.addAttribute("books", bookService.getAllBooks());
+        model.addAttribute("bookIds", userBookService.getBookIdsByUser(principal.getName()));
+        model.addAttribute("addedBook", bookId);
+
+        return "fragments/bookList :: bookContainer";
+    }
+
+    @PostMapping("/addToProgress")
+    public String addToProgress(@RequestParam("bookId") Long bookId, Model model, Principal principal) {
+
+        try {
+            userBookService.addToProgress(bookId, principal.getName());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        model.addAttribute("toReadBooks", userBookService.getBooksByUserAndStatus(principal.getName(), BookStatus.TO_READ));
+        model.addAttribute("inProgressBooks", userBookService.getBooksByUserAndStatus(principal.getName(), BookStatus.IN_PROGRESS));
+        model.addAttribute("readBooks", userBookService.getBooksByUserAndStatus(principal.getName(), BookStatus.READ));
+
+        return "fragments/userBookList :: userBookContainer";
+    }
+
+    @PostMapping("/addToRead")
+    public String addToRead(@RequestParam("bookId") Long bookId, Model model, Principal principal) {
+
+        try {
+            userBookService.addToRead(bookId, principal.getName());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        model.addAttribute("toReadBooks", userBookService.getBooksByUserAndStatus(principal.getName(), BookStatus.TO_READ));
+        model.addAttribute("inProgressBooks", userBookService.getBooksByUserAndStatus(principal.getName(), BookStatus.IN_PROGRESS));
+        model.addAttribute("readBooks", userBookService.getBooksByUserAndStatus(principal.getName(), BookStatus.READ));
+
+        return "fragments/userBookList :: userBookContainer";
     }
 }

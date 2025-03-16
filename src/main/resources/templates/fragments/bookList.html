@@ -1,0 +1,30 @@
+<div id="bookContainer" th:fragment="bookContainer">
+
+    <div class="list-group-item" th:each="book : ${books}" th:id="'bookContainer-' + ${book.id}">
+        <div class="d-flex justify-content-between">
+            <div>
+                <p class="book-title" th:text="${book.title}"></p>
+                <p class="book-author" th:text="'by ' + ${book.author}"></p>
+                <p class="book-description" th:text="${book.description}"></p>
+            </div>
+
+            <form class="updateForm" th:action="@{/userBooks/addToList}" method="post">
+                <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
+                <input type="hidden" name="bookId" th:value="${book.id}" />
+
+                <div th:if="${not #arrays.contains(bookIds, book.id)}">
+                    <button class="btn btn-primary" type="submit">Add to List</button>
+                </div>
+                <div th:if="${#arrays.contains(bookIds, book.id)}">
+                    <p>Book already in list</p>
+
+                    <div th:if="${book.id == addedBook}">
+                        <div th:if="${successMessage}" class="message alert alert-success" th:text="${successMessage}"></div>
+                        <div th:if="${errorMessage}" class="message alert alert-danger" th:text="${errorMessage}"></div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</div>

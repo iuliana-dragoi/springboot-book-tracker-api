@@ -23,13 +23,18 @@ public class LibraryController {
 
     @GetMapping("")
     public String getDashboard(Model model, Principal principal) {
-
         model.addAttribute("books", bookService.getAllBooks());
-        model.addAttribute("toReadBooks", userBookService.getBooksByStatus(BookStatus.TO_READ));
-        model.addAttribute("inProgressBooks", userBookService.getBooksByStatus(BookStatus.IN_PROGRESS));
-        model.addAttribute("readBooks", userBookService.getBooksByStatus(BookStatus.READ));
-        model.addAttribute("bookIds", userBookService.getBooksByUser(principal.getName()));
+        model.addAttribute("bookIds", userBookService.getBookIdsByUser(principal.getName()));
 
         return "library"; // Thymeleaf template name
+    }
+
+    @GetMapping("/geMyBooks")
+    public String getMyBooks(Model model, Principal principal) {
+        model.addAttribute("toReadBooks", userBookService.getBooksByUserAndStatus(principal.getName(), BookStatus.TO_READ));
+        model.addAttribute("inProgressBooks", userBookService.getBooksByUserAndStatus(principal.getName(), BookStatus.IN_PROGRESS));
+        model.addAttribute("readBooks", userBookService.getBooksByUserAndStatus(principal.getName(), BookStatus.READ));
+
+        return "fragments/userBookList :: userBookContainer";
     }
 }
