@@ -25,6 +25,56 @@
                 </div>
             </form>
         </div>
+
+        <div th:with="hasReviews=${book.userBooks != null and not #lists.isEmpty(book.userBooks) and #lists.size(book.userBooks.?[review != null and review != '']) > 0}">
+
+            <div th:if="${hasReviews}">
+
+                <div class="row">
+                    <div class="col-auto" th:with="reviewCount=${#lists.size(book.userBooks.?[review != null and review != ''])}">
+                        <h6 class="fw-bold text-primary center">Book Reviews (<span th:text="${reviewCount}"></span>)</h6>
+                    </div>
+
+                    <div class="">
+                        <a href="#" class="text-secondary" data-toggle="collapse"
+                           th:data-target="'#collapseReviews' + ${book.id}"
+                           aria-expanded="false"
+                           th:aria-controls="'collapseReviews' + ${book.id}"
+                           onclick="toggleChevron(this)">
+
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                 class="icon-tabler icon-tabler-chevron-up chevron-icon chevron-up" style="display: none;">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                <path d="M6 15l6 -6l6 6"/>
+                            </svg>
+
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                 class="icon-tabler icon-tabler-chevron-down chevron-icon chevron-down">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                <path d="M6 9l6 6l6 -6"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div th:if="${not hasReviews}">
+                <h6 class="fw-bold text-primary">No reviews yet</h6>
+            </div>
+
+            <div class="collapse" th:id="'collapseReviews' + ${book.id}">
+                <div th:each="userBook : ${book.userBooks}" th:id="'userBookContainer-' + ${userBook.id}" style="padding-top: 4px">
+                    <div th:if="${userBook.review != null and userBook.review != ''}" style="padding-top: 6px">
+                        <div class="card shadow-sm border-0 bg-light p-3">
+                            <h6 class="fw-bold text-primary" th:text="${userBook.user.username}"></h6>
+                            <p class="mb-0 text-muted" th:text="${userBook.review}"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
 </div>

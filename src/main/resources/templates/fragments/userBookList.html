@@ -91,7 +91,7 @@
                         </div>
                     </div>
 
-                    <div style="padding-top: 16px">
+                    <div th:if="${userBook.review != null and userBook.review != ''}" style="padding-top: 16px">
                         <div class="card shadow-sm border-0 bg-light p-3">
                             <h6 class="fw-bold text-primary">Your Review</h6>
                             <p class="mb-0 text-muted" th:text="${userBook.review}"></p>

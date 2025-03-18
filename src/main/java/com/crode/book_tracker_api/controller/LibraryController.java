@@ -29,6 +29,14 @@ public class LibraryController {
         return "library"; // Thymeleaf template name
     }
 
+    @GetMapping("/refresh")
+    public String refreshLibrary(Model model, Principal principal) {
+        model.addAttribute("books", bookService.getAllBooks());
+        model.addAttribute("bookIds", userBookService.getBookIdsByUser(principal.getName()));
+
+        return "fragments/BookList :: bookContainer";
+    }
+
     @GetMapping("/geMyBooks")
     public String getMyBooks(Model model, Principal principal) {
         model.addAttribute("toReadBooks", userBookService.getBooksByUserAndStatus(principal.getName(), BookStatus.TO_READ));
