@@ -7,10 +7,10 @@
         <div class="row">
             <div class="col">
                 <label for="reviewText" class="form-label">Write your review:</label>
-                <textarea id="reviewText" name="review" class="form-control" rows="2" required></textarea>
+                <textarea id="reviewText" name="review" class="form-control" rows="2" required th:placeholder="${userBook.review}"></textarea>
             </div>
 
-            <div class="">
+            <div style="padding-top: 12px">
                 <div class="center">
                     <button type="submit" class="btn btn-primary">Submit Review</button>
                 </div>

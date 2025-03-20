@@ -34,6 +34,8 @@ public class SecurityConfig {
                 // Allow full access to the H2 console (only for development/testing)
                 .requestMatchers("/h2-console/**").permitAll()
 
+                .requestMatchers("/", "/login", "/register").permitAll()
+
                 // Require authentication for accessing the library page
                 .requestMatchers("/library").authenticated()
 
@@ -46,6 +48,9 @@ public class SecurityConfig {
 
             // Configure form-based login
             .formLogin(form -> form
+
+                // It sets /login as the custom login page and allows everyone to access it without authentication.
+                .loginPage("/login").permitAll()
 
                 // After successful login, redirect users to /library
                 .defaultSuccessUrl("/library", true)

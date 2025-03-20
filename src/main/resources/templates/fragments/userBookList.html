@@ -9,7 +9,7 @@
                         <div class="col">
                             <span class="center" th:text="'Title: ' + ${userBook.book.title}"></span>
                         </div>
-                        <div class="">
+                        <div class="col-auto">
                             <form class="updateUserBookForm" th:action="@{/userBooks/addToProgress}" method="post">
                                 <input type="hidden" name="bookId" th:value="${userBook.book.id}" />
                                 <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
@@ -41,7 +41,7 @@
                             </div>
                         </div>
 
-                        <div class="">
+                        <div class="col-auto">
                             <form class="updateUserBookForm" th:action="@{/userBooks/updateProgress}" method="post">
                                 <input type="hidden" name="bookId" th:value="${userBook.book.id}" />
                                 <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
@@ -50,7 +50,7 @@
                             </form>
                         </div>
 
-                        <div style="padding-left: 4px" th:if="${userBook.progress == 100}">
+                        <div class="col-auto" th:if="${userBook.progress == 100}">
                             <form class="updateUserBookForm" th:action="@{/userBooks/addToRead}" method="post">
                                 <input type="hidden" name="bookId" th:value="${userBook.book.id}" />
                                 <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
@@ -76,7 +76,7 @@
 
                         <div class="col">
                             <div th:if="${userBook.review != null}">
-                                <button style="margin-bottom: 4px" class="btn btn-secondary" type="button" data-toggle="collapse" th:data-target="'#collapseExample' + ${userBook.book.id}"  aria-expanded="false" th:aria-controls="'collapseExample' + ${userBook.book.id}">
+                                <button style="margin-bottom: 4px" class="btn btn-secondary" type="button" data-bs-toggle="collapse" th:data-bs-target="'#collapseExample' + ${userBook.book.id}"  aria-expanded="false" th:aria-controls="'collapseExample' + ${userBook.book.id}">
                                     Change review
                                 </button>
 
@@ -97,7 +97,6 @@
                             <p class="mb-0 text-muted" th:text="${userBook.review}"></p>
                         </div>
                     </div>
-
                 </li>
             </ul>
         </div>

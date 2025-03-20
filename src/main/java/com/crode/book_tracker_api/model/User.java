@@ -1,26 +1,41 @@
 package com.crode.book_tracker_api.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import jakarta.validation.constraints.Email;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
 @Entity
 @Table(name = "users")
-public class User {
+public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "Username is mandatory")
+    @Size(min = 3, max = 50)
+    @Column(unique = true)
     private String username;
 
+    @NotBlank(message = "Email is mandatory")
+    @Email
+    @Column(unique = true)
     private String email;
 
+    @NotBlank
+    @Size(min = 6, max = 100)
     private String password;
 
     @CreationTimestamp
+    @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
@@ -72,5 +87,30 @@ public class User {
 
     public void setUserBooks(List<UserBook> userBooks) {
         this.userBooks = userBooks;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of();
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 }

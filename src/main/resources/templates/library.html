@@ -1,182 +1,184 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="_csrf" th:content="${_csrf.token}"/>
-    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
-    <title>Library</title>
-    <style>
-        body {
-            background-color: #f8f9fa;
-            padding-top: 30px;
-        }
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="_csrf" th:content="${_csrf.token}"/>
+        <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 
-        .container {
-            max-width: 1200px;
-        }
+        <title>Library</title>
 
-        .book-card {
-            margin-bottom: 20px;
-        }
+        <script src="https://code.jquery.com/jquery-latest.min.js"></script>
 
-        .progress-bar {
-            margin-top: 10px;
-        }
+        <script>
+            $(document).ready(function() {
 
-        h1 {
-            text-align: center;
-            margin-bottom: 20px;
-        }
+                $(document).on('submit', '.updateForm', function(event) {
+                    event.preventDefault();
 
-        .book-title {
-            font-size: 1.25rem;
-            font-weight: bold;
-        }
+                    var form = $(this);
+                    var url = form.attr('action');
+                    var data = form.serialize();
+                    var csrfToken = $('input[name="_csrf"]').val();
+                    var csrfHeader = $('meta[name="_csrf_header"]').attr('content');
 
-        .book-author {
-            font-size: 1rem;
-            color: #6c757d;
-        }
+                    $.ajax({
+                        type: 'POST',
+                        url: url,
+                        data: data,
+                        beforeSend: function(xhr) {
+                            xhr.setRequestHeader(csrfHeader, csrfToken);
+                        },
+                        success: function(response) {
+                            $('#bookContainer').replaceWith($(response).filter('#bookContainer'));
 
-        .book-description {
-            font-size: 0.875rem;
-            color: #343a40;
-        }
-
-        .nav-tabs {
-            margin-bottom: 20px;
-        }
-
-        .message {
-            text-align: center; position: absolute; z-index: 10; left: 0; top:0; width: 100%;
-        }
-
-        .center { display: flex; align-items: center; height: 100%; }
-
-    </style>
-
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-
-    <script>
-        $(document).ready(function() {
-
-            $(document).on('submit', '.updateForm', function(event) {
-                event.preventDefault();
-
-                var form = $(this);
-                var url = form.attr('action');
-                var data = form.serialize();
-                var csrfToken = $('input[name="_csrf"]').val();
-                var csrfHeader = $('meta[name="_csrf_header"]').attr('content');
-
-                $.ajax({
-                    type: 'POST',
-                    url: url,
-                    data: data,
-                    beforeSend: function(xhr) {
-                        xhr.setRequestHeader(csrfHeader, csrfToken);
-                    },
-                    success: function(response) {
-                        $('#bookContainer').replaceWith($(response).filter('#bookContainer'));
-
-                        setTimeout(function(){
-                            $('.alert-success').fadeOut('slow', function(){
-                                $(this).remove();
-                            });
-                        }, 200);
-                    }
+                            setTimeout(function(){
+                                $('.alert-success').fadeOut('slow', function(){
+                                    $(this).remove();
+                                });
+                            }, 200);
+                        }
+                    });
                 });
-            });
 
-            $(document).on('submit', '.updateUserBookForm', function(event) {
-                event.preventDefault();
+                $(document).on('submit', '.updateUserBookForm', function(event) {
+                    event.preventDefault();
 
-                var form = $(this);
-                var url = form.attr('action');
-                var data = form.serialize();
-                var csrfToken = $('input[name="_csrf"]').val();
-                var csrfHeader = $('meta[name="_csrf_header"]').attr('content');
+                    var form = $(this);
+                    var url = form.attr('action');
+                    var data = form.serialize();
+                    var csrfToken = $('input[name="_csrf"]').val();
+                    var csrfHeader = $('meta[name="_csrf_header"]').attr('content');
 
-                $.ajax({
-                    type: 'POST',
-                    url: url,
-                    data: data,
-                    beforeSend: function(xhr) {
-                        xhr.setRequestHeader(csrfHeader, csrfToken);
-                    },
-                    success: function(response) {
-                        $('#userBookContainer').replaceWith($(response).filter('#userBookContainer'));
+                    $.ajax({
+                        type: 'POST',
+                        url: url,
+                        data: data,
+                        beforeSend: function(xhr) {
+                            xhr.setRequestHeader(csrfHeader, csrfToken);
+                        },
+                        success: function(response) {
+                            $('#userBookContainer').replaceWith($(response).filter('#userBookContainer'));
 
-                        setTimeout(function(){
-                            $('.alert-success').fadeOut('slow', function(){
-                                $(this).remove();
-                            });
-                        }, 200);
-                    }
+                            setTimeout(function(){
+                                $('.alert-success').fadeOut('slow', function(){
+                                    $(this).remove();
+                                });
+                            }, 200);
+                        }
+                    });
                 });
-            });
 
-            $('#my-books-tab').click(function(event) {
-                event.preventDefault();
+                $('#my-books-tab').click(function(event) {
+                    event.preventDefault();
 
-                var csrfToken = $('input[name="_csrf"]').val();
-                var csrfHeader = $('meta[name="_csrf_header"]').attr('content');
+                    var csrfToken = $('input[name="_csrf"]').val();
+                    var csrfHeader = $('meta[name="_csrf_header"]').attr('content');
 
-                $.ajax({
-                    type: 'GET',
-                    url: '/library/geMyBooks',
-                    beforeSend: function(xhr) {
-                        xhr.setRequestHeader(csrfHeader, csrfToken);
-                    },
-                    success: function(response) {
-                        $('#userBookContainer').replaceWith($(response).filter('#userBookContainer'));
-                    },
-                    error: function(error) {
-                        console.error("Eroare AJAX:", error);
-                    }
+                    $.ajax({
+                        type: 'GET',
+                        url: '/library/geMyBooks',
+                        beforeSend: function(xhr) {
+                            xhr.setRequestHeader(csrfHeader, csrfToken);
+                        },
+                        success: function(response) {
+                            $('#userBookContainer').replaceWith($(response).filter('#userBookContainer'));
+                        },
+                        error: function(error) {
+                            console.error("Eroare AJAX:", error);
+                        }
+                    });
                 });
-            });
 
-            $('#all-books-tab').click(function(event) {
-                event.preventDefault();
+                $('#all-books-tab').click(function(event) {
+                    event.preventDefault();
 
-                var csrfToken = $('input[name="_csrf"]').val();
-                var csrfHeader = $('meta[name="_csrf_header"]').attr('content');
+                    var csrfToken = $('input[name="_csrf"]').val();
+                    var csrfHeader = $('meta[name="_csrf_header"]').attr('content');
 
-                $.ajax({
-                    type: 'GET',
-                    url: '/library/refresh',
-                    beforeSend: function(xhr) {
-                        xhr.setRequestHeader(csrfHeader, csrfToken);
-                    },
-                    success: function(response) {
-                        $('#bookContainer').replaceWith($(response).filter('#bookContainer'));
-                    },
-                    error: function(error) {
-                        console.error("Eroare AJAX:", error);
-                    }
+                    $.ajax({
+                        type: 'GET',
+                        url: '/library/refresh',
+                        beforeSend: function(xhr) {
+                            xhr.setRequestHeader(csrfHeader, csrfToken);
+                        },
+                        success: function(response) {
+                            $('#bookContainer').replaceWith($(response).filter('#bookContainer'));
+                        },
+                        error: function(error) {
+                            console.error("Eroare AJAX:", error);
+                        }
+                    });
                 });
-            });
 
-        });
-    </script>
-</head>
+            });
+        </script>
+
+        <style>
+            body {
+                background-color: #f8f9fa;
+                padding-top: 30px;
+            }
+
+            .container {
+                max-width: 1200px;
+            }
+
+            .book-card {
+                margin-bottom: 20px;
+            }
+
+            .progress-bar {
+                margin-top: 10px;
+            }
+
+            h1 {
+                text-align: center;
+                margin-bottom: 20px;
+            }
+
+            .book-title {
+                font-size: 1.25rem;
+                font-weight: bold;
+            }
+
+            .book-author {
+                font-size: 1rem;
+                color: #6c757d;
+            }
+
+            .book-description {
+                font-size: 0.875rem;
+                color: #343a40;
+            }
+
+            .nav-tabs {
+                margin-bottom: 20px;
+            }
+
+            .message {
+                text-align: center; position: absolute; z-index: 10; left: 0; top:0; width: 100%;
+            }
+
+            .center { display: flex; align-items: center; height: 100%; }
+
+        </style>
+    </head>
 
     <body>
         <div class="container">
 
             <h1>Welcome to the Book Library</h1>
 
-            <!-- Tab Menu -->
-            <ul class="nav nav-tabs" id="myTab" role="tablist">
-                <li class="nav-item">
-                    <a class="nav-link active" id="all-books-tab" data-toggle="tab" href="#all-books" role="tab" aria-controls="all-books" aria-selected="true">All Books</a>
+            <ul class="nav nav-tabs" id="tab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="all-books-tab" data-bs-toggle="tab" data-bs-target="#all-books-tab-pane" type="button" role="tab" aria-controls="all-books-tab-pane" aria-selected="true">Library</button>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" id="my-books-tab" data-toggle="tab" href="#my-books" role="tab" aria-controls="my-books" aria-selected="false">My Books</a>
+                
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="my-books-tab" data-bs-toggle="tab" data-bs-target="#my-books-tab-pane" type="button" role="tab" aria-controls="my-books-tab-pane" aria-selected="false">My Books</button>
                 </li>
 
                 <li class="nav-item ml-auto">
@@ -185,11 +187,9 @@
                     </form>
                 </li>
             </ul>
-
-            <!-- Tab Content -->
-            <div class="tab-content" id="myTabContent">
-
-                <div class="tab-pane fade show active" id="all-books" role="tabpanel" aria-labelledby="all-books-tab">
+            
+            <div class="tab-content" id="tabContent">
+                <div class="tab-pane fade show active" id="all-books-tab-pane" role="tabpanel" aria-labelledby="all-books-tab" tabindex="0">
                     <h2 class="mb-4">All Books</h2>
 
                     <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
@@ -199,30 +199,28 @@
                         <div th:replace="~{fragments/bookList :: bookContainer}"></div>
                     </div>
                 </div>
-
-                <div class="tab-pane fade" id="my-books" role="tabpanel" aria-labelledby="my-books-tab">
+                <div class="tab-pane fade" id="my-books-tab-pane" role="tabpanel" aria-labelledby="my-books-tab" tabindex="0">
                     <div th:replace="~{fragments/userBookList :: userBookContainer}"></div>
                 </div>
             </div>
-
         </div>
 
         <script>
             function toggleChevron(element) {
-                let up = element.querySelector(".chevron-up");
-                let down = element.querySelector(".chevron-down");
+                const chevronUp = element.querySelector('.chevron-up');
+                const chevronDown = element.querySelector('.chevron-down');
 
-                if (down.style.display === "none") {
-                    down.style.display = "inline";
-                    up.style.display = "none";
+                if (chevronUp.style.display === 'none') {
+                    chevronUp.style.display = 'inline';
+                    chevronDown.style.display = 'none';
                 } else {
-                    down.style.display = "none";
-                    up.style.display = "inline";
+                    chevronUp.style.display = 'none';
+                    chevronDown.style.display = 'inline';
                 }
             }
         </script>
 
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     </body>
-
 </html>
