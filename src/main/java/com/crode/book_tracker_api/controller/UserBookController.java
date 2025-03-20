@@ -35,6 +35,7 @@ public class UserBookController {
         model.addAttribute("books", bookService.getAllBooks());
         model.addAttribute("bookIds", userBookService.getBookIdsByUser(principal.getName()));
         model.addAttribute("addedBook", bookId);
+        model.addAttribute("currentUser", principal.getName());
 
         return "fragments/bookList :: bookContainer";
     }

@@ -164,13 +164,27 @@
 
             .center { display: flex; align-items: center; height: 100%; }
 
+            .bullet-to-read {
+                color: orange;
+                font-weight: bold;
+            }
+
+            .bullet-in-progress {
+                color: blue;
+                font-weight: bold;
+            }
+
+            .bullet-read {
+                color: green;
+                font-weight: bold;
+            }
         </style>
     </head>
 
     <body>
         <div class="container">
 
-            <h1>Welcome to the Book Library</h1>
+            <h1>Book Library</h1>
 
             <ul class="nav nav-tabs" id="tab" role="tablist">
                 <li class="nav-item" role="presentation">
@@ -186,6 +200,11 @@
                         <button type="submit" class="nav-link btn btn-link">Logout</button>
                     </form>
                 </li>
+
+                <li class="nav-item ms-auto" style="display: flex; align-items: center;">
+                    Welcome, <span th:text="${currentUser}" style="margin-left: 4px;"></span>
+                </li>
+
             </ul>
             
             <div class="tab-content" id="tabContent">

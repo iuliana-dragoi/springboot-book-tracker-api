@@ -1,7 +1,7 @@
 <div id="userBookContainer" th:fragment="userBookContainer">
 
     <div class="row">
-        <div class="col card-body">
+        <div class="col card-body" style="padding-bottom: 16px">
             <h3 class="mb-2">To Read</h3>
             <ul class="list-group">
                 <li class="list-group-item" th:each="userBook : ${toReadBooks}">
@@ -21,7 +21,7 @@
             </ul>
         </div>
 
-        <div class="col card-body">
+        <div class="col card-body" style="padding-bottom: 16px">
             <h3 class="mb-2">In Progress</h3>
             <ul class="list-group">
                 <li class="list-group-item" th:each="userBook : ${inProgressBooks}">
@@ -46,7 +46,7 @@
                                 <input type="hidden" name="bookId" th:value="${userBook.book.id}" />
                                 <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
                                 <input type="number" name="progress" min="0" max="100" step="1" />
-                                <button type="submit" class="btn btn-secondary">Update</button>
+                                <button type="submit" class="btn btn-secondary" style="margin-left: 4px">Update</button>
                             </form>
                         </div>
 
@@ -63,7 +63,7 @@
 
         </div>
 
-        <div class="col card-body">
+        <div class="col card-body" style="padding-bottom: 16px">
             <h3 class="mb-2">Read</h3>
             <ul class="list-group">
                 <li class="list-group-item" th:each="userBook : ${readBooks}">

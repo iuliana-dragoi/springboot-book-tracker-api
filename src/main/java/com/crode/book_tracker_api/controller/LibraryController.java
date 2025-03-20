@@ -25,6 +25,7 @@ public class LibraryController {
     public String getDashboard(Model model, Principal principal) {
         model.addAttribute("books", bookService.getAllBooks());
         model.addAttribute("bookIds", userBookService.getBookIdsByUser(principal.getName()));
+        model.addAttribute("currentUser", principal.getName());
 
         return "library"; // Thymeleaf template name
     }
@@ -33,6 +34,7 @@ public class LibraryController {
     public String refreshLibrary(Model model, Principal principal) {
         model.addAttribute("books", bookService.getAllBooks());
         model.addAttribute("bookIds", userBookService.getBookIdsByUser(principal.getName()));
+        model.addAttribute("currentUser", principal.getName());
 
         return "fragments/BookList :: bookContainer";
     }
