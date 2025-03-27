@@ -1,0 +1,25 @@
+<div id="createBookContainer" th:fragment="createBookContainer" >
+
+    <div th:if="${bookDTO != null}">
+
+        <form id="createBookForm" onsubmit="createBook();">
+            <div class="form-group">
+                <label for="title">Title</label>
+                <input type="text" id="title" class="form-control" required>
+            </div>
+
+            <div class="form-group">
+                <label for="author">Author</label>
+                <input type="text" id="author" class="form-control" required>
+            </div>
+
+            <div class="form-group">
+                <label for="description">Description</label>
+                <textarea id="description" class="form-control" required></textarea>
+            </div>
+
+            <button type="submit" style="margin-top: 16px" class="btn btn-primary">Create Book</button>
+        </form>
+
+    </div>
+</div>

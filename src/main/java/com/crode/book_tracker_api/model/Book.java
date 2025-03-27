@@ -1,5 +1,6 @@
 package com.crode.book_tracker_api.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -19,7 +20,18 @@ public class Book {
     private String description;
 
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<UserBook> userBooks;
+
+    public Book(String title, String author, String description) {
+        this.title = title;
+        this.author = author;
+        this.description = description;
+    }
+
+    public Book() {
+
+    }
 
     public Long getId() {
         return id;

@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 @PasswordMatches
-public class UserDto {
+public class UserRegisterDTO {
 
     @NotBlank
     @Size(min = 3, max = 50)

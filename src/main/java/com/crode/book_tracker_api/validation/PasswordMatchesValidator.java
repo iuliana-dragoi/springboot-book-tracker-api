@@ -1,6 +1,6 @@
 package com.crode.book_tracker_api.validation;
 
-import com.crode.book_tracker_api.dto.UserDto;
+import com.crode.book_tracker_api.dto.UserRegisterDTO;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
@@ -12,7 +12,7 @@ public class PasswordMatchesValidator implements ConstraintValidator<PasswordMat
 
     @Override
     public boolean isValid(Object obj, ConstraintValidatorContext context){
-        UserDto user = (UserDto) obj;
+        UserRegisterDTO user = (UserRegisterDTO) obj;
 
         if(user.getPassword().equals(user.getMatchingPassword())) {
             return true;

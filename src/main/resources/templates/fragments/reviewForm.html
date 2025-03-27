@@ -1,7 +1,7 @@
 <div id="reviewFormContainer" th:fragment="reviewFormContainer">
 
     <form class="updateUserBookForm" th:action="@{/userBooks/updateReview}" method="post">
-        <input type="hidden" name="bookId" th:value="${userBook.book.id}" />
+        <input type="hidden" name="bookId" th:value="${userBook.bookId}" />
         <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
 
         <div class="row">

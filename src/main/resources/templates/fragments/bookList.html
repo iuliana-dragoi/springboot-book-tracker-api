@@ -1,54 +1,83 @@
-<div id="bookContainer" th:fragment="bookContainer">
+<div id="bookContainer" th:fragment="bookContainer" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+    <div th:if="${deletedBook == true}" class="alert-container">
+        <div th:if="${successMessage}" class="message alert alert-success" th:text="${successMessage}"></div>
+        <div th:if="${errorMessage}" class="message alert alert-danger" th:text="${errorMessage}"></div>
+    </div>
 
     <div class="list-group-item" th:each="book : ${books}" th:id="'bookContainer-' + ${book.id}">
         <div class="d-flex justify-content-between">
             <div>
-                <p class="book-title" th:text="${book.title}"></p>
-                <p class="book-author" th:text="'by ' + ${book.author}"></p>
-                <p class="book-description" th:text="${book.description}"></p>
+                <div th:id="'bookDetails-' + ${book.id}">
+                    <p class="book-title" th:text="${book.title}"></p>
+                    <p class="book-author" th:text="'by ' + ${book.author}"></p>
+                    <p class="book-description" th:text="${book.description}"></p>
+                </div>
+
+                <div th:id="'editForm-' + ${book.id}" style="display: none;">
+                    <input type="text" th:id="'title-' + ${book.id}" th:value="${book.title}" class="form-control" /><br>
+                    <input type="text" th:id="'author-' + ${book.id}" th:value="${book.author}" class="form-control" /><br>
+                    <textarea th:id="'description-' + ${book.id}" class="form-control">[[${book.description}]]</textarea><br>
+                    <button type="button" class="btn btn-success" th:onclick="'saveBook(' + ${book.id} + ')'">Save</button>
+                </div>
             </div>
 
-            <form class="updateForm" th:action="@{/userBooks/addToList}" method="post">
-                <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
-                <input type="hidden" name="bookId" th:value="${book.id}" />
+            <div>
+                <form class="updateForm" th:action="@{/userBooks/addToList}" method="post">
+                    <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
+                    <input type="hidden" name="bookId" th:value="${book.id}" />
 
-                <div th:if="${not #arrays.contains(bookIds, book.id)}">
-                    <button class="btn btn-primary" type="submit">Add to List</button>
-                </div>
+                    <div th:if="${not #arrays.contains(bookIds, book.id)}">
+                        <button class="btn btn-primary" type="submit">Add to List</button>
+                    </div>
 
-                <div th:if="${#arrays.contains(bookIds, book.id)}">
+                    <div th:if="${#arrays.contains(bookIds, book.id)}">
 
-                    <div th:each="userBook : ${book.userBooks}">
+                    <div th:each="userBook : ${book.userBookDetails}">
 
-                        <div th:if="${userBook.user.username == currentUser}">
+                        <div th:if="${userBook.username == currentUser}">
 
-                            <p>
-                            <span th:class="(${userBook.status.toString()} == 'TO_READ' ? 'bullet-to-read' :
-                                (${userBook.status.toString()} == 'IN_PROGRESS' ? 'bullet-in-progress' : 'bullet-read'))">
-                                Status:
-                            </span>
+                                <p>
+                                    <span th:class="(${userBook.status.toString()} == 'TO_READ' ? 'bullet-to-read' :
+                                        (${userBook.status.toString()} == 'IN_PROGRESS' ? 'bullet-in-progress' : 'bullet-read'))">
+                                        Status:
+                                    </span>
 
-                            <span th:text="
-                                (${userBook.status.toString()} == 'TO_READ' ? 'To Read' :
-                                (${userBook.status.toString()} == 'IN_PROGRESS' ? 'In Progress' : 'Read'))"></span>
-                            </p>
+                                    <span th:text="
+                                        (${userBook.status.toString()} == 'TO_READ' ? 'To Read' :
+                                        (${userBook.status.toString()} == 'IN_PROGRESS' ? 'In Progress' : 'Read'))">
+                                    </span>
+                                </p>
+                            </div>
+                        </div>
+
+                        <div th:if="${book.id == addedBook}">
+                            <div th:if="${successMessage}" class="message alert alert-success" th:text="${successMessage}"></div>
+                            <div th:if="${errorMessage}" class="message alert alert-danger" th:text="${errorMessage}"></div>
                         </div>
                     </div>
+                </form>
 
-                    <div th:if="${book.id == addedBook}">
-                        <div th:if="${successMessage}" class="message alert alert-success" th:text="${successMessage}"></div>
-                        <div th:if="${errorMessage}" class="message alert alert-danger" th:text="${errorMessage}"></div>
-                    </div>
+                <div class="d-flex" style="padding-top: 16px; justify-content: end;" sec:authorize="hasRole('ADMIN')">
+                    <button th:id="'editBtn-' + ${book.id}" class="btn btn-primary" type="button" th:onclick="'toggleEdit(' + ${book.id} + ')'">Edit</button>
                 </div>
-            </form>
+
+                <div class="d-flex" style="padding-top: 16px; justify-content: end;" sec:authorize="hasRole('ADMIN')">
+                    <form class="updateForm" th:action="@{/library/deleteBook}" method="post">
+                        <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
+                        <input type="hidden" name="bookId" th:value="${book.id}" />
+                        <button class="btn btn-primary" type="submit">Delete</button>
+                    </form>
+                </div>
+            </div>
         </div>
 
-        <div th:with="hasReviews=${book.userBooks != null and not #lists.isEmpty(book.userBooks) and #lists.size(book.userBooks.?[review != null and review != '']) > 0}">
+        <div th:with="hasReviews=${book.userBookDetails != null and not #lists.isEmpty(book.userBookDetails) and #lists.size(book.userBookDetails.?[review != null and review != '']) > 0}">
 
             <div th:if="${hasReviews}">
 
                 <div class="row">
-                    <div class="col-auto" th:with="reviewCount=${#lists.size(book.userBooks.?[review != null and review != ''])}">
+                    <div class="col-auto" th:with="reviewCount=${#lists.size(book.userBookDetails.?[review != null and review != ''])}">
                         <h6 class="fw-bold text-primary center">Book Reviews (<span th:text="${reviewCount}"></span>)</h6>
                     </div>
 
@@ -82,10 +111,10 @@
             </div>
 
             <div th:id="'collapseReviews' + ${book.id}" class="collapse">
-                <div th:each="userBook : ${book.userBooks}" th:id="'userBookContainer-' + ${userBook.id}" style="padding-top: 4px">
+                <div th:each="userBook : ${book.userBookDetails}" th:id="'userBookContainer-' + ${userBook.id}" style="padding-top: 4px">
                     <div th:if="${userBook.review != null and userBook.review != ''}" style="padding-top: 6px">
                         <div class="card shadow-sm border-0 bg-light p-3">
-                            <h6 class="fw-bold text-primary" th:text="${userBook.user.username}"></h6>
+                            <h6 class="fw-bold text-primary" th:text="${userBook.username}"></h6>
                             <p class="mb-0 text-muted" th:text="${userBook.review}"></p>
                         </div>
                     </div>

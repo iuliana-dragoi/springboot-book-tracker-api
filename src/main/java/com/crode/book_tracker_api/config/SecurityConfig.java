@@ -1,5 +1,6 @@
 package com.crode.book_tracker_api.config;
 
+import com.crode.book_tracker_api.model.Role;
 import com.crode.book_tracker_api.service.CustomUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,6 +11,7 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -18,6 +20,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import java.util.Arrays;
 
 @Configuration
+@EnableWebSecurity
 public class SecurityConfig {
 
     private final CustomUserDetailsService userDetailsService;
@@ -38,6 +41,11 @@ public class SecurityConfig {
 
                 // Require authentication for accessing the library page
                 .requestMatchers("/library").authenticated()
+
+                .requestMatchers(HttpMethod.GET,  "/book/**").hasAnyRole(Role.ADMIN.name())
+                .requestMatchers(HttpMethod.POST,  "/book/**").hasAnyRole(Role.ADMIN.name())
+                .requestMatchers(HttpMethod.PUT,  "/book/**").hasAnyRole(Role.ADMIN.name())
+                .requestMatchers(HttpMethod.DELETE,  "/book/**").hasAnyRole(Role.ADMIN.name())
 
                 // Ensure only authenticated users can send a POST request to add a book to their list
                 .requestMatchers(HttpMethod.POST, "/userBooks/addToList").authenticated()

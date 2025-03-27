@@ -1,5 +1,6 @@
 package com.crode.book_tracker_api.service;
 
+import com.crode.book_tracker_api.dto.UserBookDTO;
 import com.crode.book_tracker_api.model.Book;
 import com.crode.book_tracker_api.model.BookStatus;
 import com.crode.book_tracker_api.model.User;
@@ -7,6 +8,7 @@ import com.crode.book_tracker_api.model.UserBook;
 import com.crode.book_tracker_api.repository.BookRepository;
 import com.crode.book_tracker_api.repository.UserBookRepository;
 import com.crode.book_tracker_api.repository.UserRepository;
+import com.crode.book_tracker_api.util.EntityToDtoConverter;
 import org.springframework.stereotype.*;
 import java.util.List;
 import java.util.Set;
@@ -28,11 +30,10 @@ public class UserBookService {
         this.userRepository = userRepository;
     }
 
-    public List<UserBook> getBooksByUserAndStatus(String username, BookStatus status) {
-        User user = userRepository.findUserByUsername(username)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-
-        return userBookRepository.findByUserIdAndStatus(user.getId(), status);
+    public List<UserBookDTO> getBooksByUserAndStatus(String username, BookStatus status) {
+        User user = userRepository.findUserByUsername(username).orElseThrow(() -> new RuntimeException("User not found"));
+        List<UserBook> userBooks = userBookRepository.findByUserIdAndStatus(user.getId(), status);
+        return userBooks.stream().map(EntityToDtoConverter::convertToUserBookDTO).toList();
     }
 
     public void addToList(Long bookId, String username) {

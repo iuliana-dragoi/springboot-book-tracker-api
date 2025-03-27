@@ -1,13 +1,12 @@
 package com.crode.book_tracker_api.service;
 
-import com.crode.book_tracker_api.dto.UserDto;
+import com.crode.book_tracker_api.dto.UserRegisterDTO;
 import com.crode.book_tracker_api.exceptions.UserAlreadyExistException;
+import com.crode.book_tracker_api.model.Role;
 import com.crode.book_tracker_api.model.User;
 import com.crode.book_tracker_api.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.*;
-
-import java.util.List;
 
 @Service
 public class UserService {
@@ -21,11 +20,7 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public List<User> findAllUsers() {
-        return userRepository.findAll();
-    }
-
-    public User registerNewUserAccount(UserDto userDto) throws UserAlreadyExistException {
+    public User registerNewUserAccount(UserRegisterDTO userDto) throws UserAlreadyExistException {
         if (emailExists(userDto.getEmail())) {
             throw new UserAlreadyExistException("There is an account with that email address: " + userDto.getEmail());
         }
@@ -37,6 +32,7 @@ public class UserService {
         user.setUsername(userDto.getUsername());
         user.setEmail(userDto.getEmail());
         user.setPassword(passwordEncoder.encode(userDto.getPassword()));
+        user.setRole(Role.USER);
 
         return userRepository.save(user);
     }

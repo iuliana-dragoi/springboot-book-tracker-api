@@ -1,7 +1,9 @@
 package com.crode.book_tracker_api.service;
 
+import com.crode.book_tracker_api.dto.BookDTO;
 import com.crode.book_tracker_api.model.Book;
 import com.crode.book_tracker_api.repository.BookRepository;
+import com.crode.book_tracker_api.util.EntityToDtoConverter;
 import org.springframework.stereotype.*;
 import java.util.List;
 
@@ -14,20 +16,22 @@ public class BookService {
         this.bookRepository = bookRepository;
     }
 
-    public List<Book> getAllBooks() {
-        return bookRepository.findAll();
-    }
-
     public Book getById(Long id) {
         return bookRepository.findById(id).orElse(null);
     }
 
-    public Book createBook(Book book) {
-        return bookRepository.save(book);
+    public List<BookDTO> getAllBooks() {
+        return bookRepository.findAll().stream().map(EntityToDtoConverter::convertToBookDTO).toList();
     }
 
-    public Book updateBook(Book book) {
-        return bookRepository.save(book);
+    public BookDTO createBook(Book book) {
+        Book savedBook = bookRepository.save(book);
+        return EntityToDtoConverter.convertToBookDTO(savedBook);
+    }
+
+    public BookDTO updateBook(Book book) {
+        Book updatedBook = bookRepository.save(book);
+        return EntityToDtoConverter.convertToBookDTO(updatedBook);
     }
 
     public void deleteBook(Long id) {

@@ -1,6 +1,6 @@
 package com.crode.book_tracker_api.controller;
 
-import com.crode.book_tracker_api.dto.UserDto;
+import com.crode.book_tracker_api.dto.UserRegisterDTO;
 import com.crode.book_tracker_api.exceptions.UserAlreadyExistException;
 import com.crode.book_tracker_api.model.User;
 import com.crode.book_tracker_api.service.UserService;
@@ -39,19 +39,19 @@ public class AuthController {
 
     @GetMapping("/register")
     public String showRegistrationForm(Model model) {
-        model.addAttribute("user", new UserDto());
+        model.addAttribute("user", new UserRegisterDTO());
         return "register";
     }
 
     @PostMapping("/register")
-    public String registerUser(@ModelAttribute("user") @Valid UserDto userDto, BindingResult result, RedirectAttributes redirectAttributes) {
+    public String registerUser(@ModelAttribute("user") @Valid UserRegisterDTO userRegisterDTO, BindingResult result, RedirectAttributes redirectAttributes) {
 
         if (result.hasErrors()) {
             return "register";
         }
 
         try {
-            User registered = userService.registerNewUserAccount(userDto);
+            User registered = userService.registerNewUserAccount(userRegisterDTO);
         } catch (UserAlreadyExistException uaeEx) {
             redirectAttributes.addFlashAttribute("userExistsError", uaeEx.getMessage());
             return "redirect:/register";

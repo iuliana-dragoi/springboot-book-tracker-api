@@ -32,7 +32,7 @@ public class CustomUserDetailsService implements UserDetailsService {
             user.getPassword(),
             enabled, accountNonExpired,
             credentialsNonExpired, accountNonLocked,
-            new ArrayList<>()
+            user.getAuthorities()
         );
     }
 }
