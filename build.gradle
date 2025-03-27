@@ -40,8 +40,12 @@ dependencies {
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	runtimeOnly 'org.postgresql:postgresql'
 	annotationProcessor 'org.projectlombok:lombok'
+
+	// Spring Boot Starter Test (includes JUnit, Mockito, etc.)
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	// If you need Spring Security Test support
 	testImplementation 'org.springframework.security:spring-security-test'
+
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 

@@ -65,7 +65,7 @@ $(document).ready(function() {
 
         $.ajax({
             type: 'GET',
-            url: '/library/geMyBooks',
+            url: '/library/getMyBooks',
             beforeSend: function(xhr) {
                 xhr.setRequestHeader(csrfHeader, csrfToken);
             },

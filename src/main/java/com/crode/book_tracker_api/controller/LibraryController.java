@@ -41,7 +41,7 @@ public class LibraryController {
         return "fragments/BookList :: bookContainer";
     }
 
-    @GetMapping("/geMyBooks")
+    @GetMapping("/getMyBooks")
     public String getMyBooks(Model model, Principal principal) {
         model.addAttribute("toReadBooks", userBookService.getBooksByUserAndStatus(principal.getName(), BookStatus.TO_READ));
         model.addAttribute("inProgressBooks", userBookService.getBooksByUserAndStatus(principal.getName(), BookStatus.IN_PROGRESS));
