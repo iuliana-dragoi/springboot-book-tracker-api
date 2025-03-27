@@ -21,7 +21,6 @@ A RESTful API for tracking books and reading progress. This application allows u
 - **PostgreSQL** (Database)
 - **Flyway** (Database Migrations)
 - **Spring Security** (Authentication and Authorization)
-- **Springdoc OpenAPI** (Swagger UI)
 - **Lombok** (Code simplification)
 - **H2** (In-memory database for testing)
 - **Thymeleaf** (Template engine)
