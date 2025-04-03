@@ -39,3 +39,8 @@ A RESTful API for tracking books and reading progress. This application allows u
 git clone https://github.com/Iuliana95/springboot-book-tracker-api.git
 cd springboot-book-tracker-api
 ```
+
+-------
+# License
+
+This project is licensed under the MIT License.
